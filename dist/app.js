@@ -21,6 +21,7 @@ const notFoundMiddleware_1 = require("./middlewares/notFoundMiddleware");
 const auth_route_1 = require("./routes/auth-route");
 const jobs_route_1 = require("./routes/jobs-route");
 dotenv_1.default.config();
+console.log(process.env);
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));

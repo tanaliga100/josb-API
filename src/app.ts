@@ -8,6 +8,7 @@ import { router as authRoute } from "./routes/auth-route";
 import { router as jobsRoute } from "./routes/jobs-route";
 
 dotenv.config();
+console.log(process.env);
 
 const app: Express = express();
 app.use(express.json());
