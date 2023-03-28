@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const dotenv_1 = __importDefault(require("dotenv"));
 const express_1 = __importDefault(require("express"));
 const morgan_1 = __importDefault(require("morgan"));
+const path_1 = __importDefault(require("path"));
 const connectDB_1 = require("./config/connectDB");
 const errorHandlerMiddleware_1 = require("./middlewares/errorHandlerMiddleware");
 const notFoundMiddleware_1 = require("./middlewares/notFoundMiddleware");
@@ -25,11 +26,12 @@ console.log(process.env);
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
+app.use(express_1.default.static(path_1.default.join(__dirname, "public")));
 app.use((0, morgan_1.default)("dev"));
 // ROUTES
-app.get("/", (req, res) => {
-    res.json({ msg: "Server Alive : Express Ts" });
-});
+// app.get("/", (req: Request, res: Response) => {
+//   res.json({ msg: "Server Alive : Express Ts" });
+// });
 app.use("/api/v1/auth", auth_route_1.router);
 app.use("/api/v1/jobs", jobs_route_1.router);
 // 404 MIDDLEWARE

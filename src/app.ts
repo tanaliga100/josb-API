@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 import express, { Express, NextFunction, Request, Response } from "express";
 import morgan from "morgan";
+import path from "path";
 import { connectDB } from "./config/connectDB";
 import { errorHandlerMidlleware } from "./middlewares/errorHandlerMiddleware";
 import { notFoundMiddleware } from "./middlewares/notFoundMiddleware";
@@ -13,11 +14,12 @@ console.log(process.env);
 const app: Express = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, "public")));
 app.use(morgan("dev"));
 // ROUTES
-app.get("/", (req: Request, res: Response) => {
-  res.json({ msg: "Server Alive : Express Ts" });
-});
+// app.get("/", (req: Request, res: Response) => {
+//   res.json({ msg: "Server Alive : Express Ts" });
+// });
 app.use("/api/v1/auth", authRoute);
 app.use("/api/v1/jobs", jobsRoute);
 

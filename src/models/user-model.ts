@@ -24,9 +24,9 @@ const UserSchema = new mongoose.Schema({
     maxlength: 100,
   },
 });
-UserSchema.pre("save", async function (): Promise<any> {
-  const salt = await bcrypt.genSalt(10);
-  this.password = await bcrypt.hash(this.password, salt);
-});
+// UserSchema.pre("save", async function (): Promise<any> {
+//   const salt = await bcrypt.genSalt(10);
+//   this.password = await bcrypt.hash(this.password, salt);
+// });
 const User = mongoose.model("Users", UserSchema);
 export default User;
