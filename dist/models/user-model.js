@@ -46,7 +46,7 @@ UserSchema.pre("save", function () {
 });
 // CREATION OF TOKEN HERE
 UserSchema.methods.createJWT = function () {
-    return jsonwebtoken_1.default.sign({ userId: this._id, name: this.name }, process.env.JWT_SECRET, { expiresIn: "1d" });
+    return jsonwebtoken_1.default.sign({ userId: this._id, name: this.name, email: this.email }, process.env.JWT_SECRET, { expiresIn: "1d" });
 };
 // COMPARE PASSWORD
 UserSchema.methods.comparePassword = function (candidatePassword) {

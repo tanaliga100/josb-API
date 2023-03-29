@@ -3,7 +3,26 @@ const user = {
   email: "jordan@mail.com",
   password: "password",
 };
-const fetchEndpoints = async () => {
+const registerHandler = async () => {
+  try {
+    const response = await fetch("/api/v1/auth/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(user),
+    });
+    const data = await response.json();
+    APIResponse(data);
+  } catch (error) {
+    console.log({ error });
+  }
+};
+document.querySelector(".register").addEventListener("click", function () {
+  registerHandler();
+  console.log("register handler fired");
+});
+const loginHandler = async () => {
   try {
     const response = await fetch("/api/v1/auth/login", {
       method: "POST",
@@ -18,11 +37,13 @@ const fetchEndpoints = async () => {
     console.log({ error });
   }
 };
-document.querySelector("button").addEventListener("click", function () {
-  fetchEndpoints();
-  console.log("fired");
+
+document.querySelector(".login").addEventListener("click", function () {
+  loginHandler();
+  console.log("login handler fired");
 });
 
+// TOKEN PERSIST
 const APIResponse = (data) => {
   console.log({ data });
   localStorage.setItem("token", data.token);

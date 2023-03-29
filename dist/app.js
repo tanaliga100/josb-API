@@ -17,6 +17,7 @@ const express_1 = __importDefault(require("express"));
 const morgan_1 = __importDefault(require("morgan"));
 const path_1 = __importDefault(require("path"));
 const connectDB_1 = require("./config/connectDB");
+const authenticationMiddleware_1 = __importDefault(require("./middlewares/authenticationMiddleware"));
 const errorHandlerMiddleware_1 = require("./middlewares/errorHandlerMiddleware");
 const notFoundMiddleware_1 = require("./middlewares/notFoundMiddleware");
 const auth_route_1 = require("./routes/auth-route");
@@ -33,7 +34,7 @@ app.use((0, morgan_1.default)("dev"));
 //   res.json({ msg: "Server Alive : Express Ts" });
 // });
 app.use("/api/v1/auth", auth_route_1.router);
-app.use("/api/v1/jobs", jobs_route_1.router);
+app.use("/api/v1/jobs", authenticationMiddleware_1.default, jobs_route_1.router);
 // 404 MIDDLEWARE
 app.use(notFoundMiddleware_1.notFoundMiddleware);
 // ERROR MIDDLEWARE

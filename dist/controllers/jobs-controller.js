@@ -20,7 +20,7 @@ const GET_JOB = (0, asyncMiddleware_1.asyncMiddleware)((req, res, next) => __awa
 }));
 exports.GET_JOB = GET_JOB;
 const CREATE_JOB = (0, asyncMiddleware_1.asyncMiddleware)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    res.send("Create Job");
+    res.json(req.user);
 }));
 exports.CREATE_JOB = CREATE_JOB;
 const UPDATE_JOB = (0, asyncMiddleware_1.asyncMiddleware)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {

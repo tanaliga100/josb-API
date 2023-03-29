@@ -3,6 +3,7 @@ import express, { Express, NextFunction, Request, Response } from "express";
 import morgan from "morgan";
 import path from "path";
 import { connectDB } from "./config/connectDB";
+import authenticationMiddleware from "./middlewares/authenticationMiddleware";
 import { errorHandlerMidlleware } from "./middlewares/errorHandlerMiddleware";
 import { notFoundMiddleware } from "./middlewares/notFoundMiddleware";
 import { router as authRoute } from "./routes/auth-route";
@@ -21,7 +22,7 @@ app.use(morgan("dev"));
 //   res.json({ msg: "Server Alive : Express Ts" });
 // });
 app.use("/api/v1/auth", authRoute);
-app.use("/api/v1/jobs", jobsRoute);
+app.use("/api/v1/jobs", authenticationMiddleware, jobsRoute);
 
 // 404 MIDDLEWARE
 app.use(notFoundMiddleware);

@@ -33,7 +33,7 @@ UserSchema.pre("save", async function (): Promise<any> {
 // CREATION OF TOKEN HERE
 UserSchema.methods.createJWT = function () {
   return jwt.sign(
-    { userId: this._id, name: this.name },
+    { userId: this._id, name: this.name, email: this.email },
     process.env.JWT_SECRET as string,
     { expiresIn: "1d" }
   );

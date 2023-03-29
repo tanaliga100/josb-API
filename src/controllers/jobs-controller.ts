@@ -13,10 +13,11 @@ const GET_JOB = asyncMiddleware(
   }
 );
 const CREATE_JOB = asyncMiddleware(
-  async (req: Request, res: Response, next: NextFunction) => {
-    res.send("Create Job");
+  async (req: any, res: Response, next: NextFunction) => {
+    res.json(req.user);
   }
 );
+
 const UPDATE_JOB = asyncMiddleware(
   async (req: Request, res: Response, next: NextFunction) => {
     res.send("Update Job");
