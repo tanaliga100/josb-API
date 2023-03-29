@@ -12,3 +12,8 @@ export interface IRegisterUser {
   _id: ObjectId;
   __v: number;
 }
+
+export interface IUserMethods {
+  createJWT: () => void;
+  fullName(): string;
+}

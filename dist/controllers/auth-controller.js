@@ -13,25 +13,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.REGISTER = exports.LOGIN = void 0;
-const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const http_status_codes_1 = require("http-status-codes");
-const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const errors_1 = require("../errors");
 const BadRequestError_1 = __importDefault(require("../errors/BadRequestError"));
 const asyncMiddleware_1 = require("../middlewares/asyncMiddleware");
 const user_model_1 = __importDefault(require("../models/user-model"));
 const REGISTER = (0, asyncMiddleware_1.asyncMiddleware)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { name, email, password } = req.body;
-    if (!name || !email || !password) {
-        throw new BadRequestError_1.default("All fields must be provided");
-    }
-    const salt = yield bcryptjs_1.default.genSalt(10);
-    const hashedPassword = yield bcryptjs_1.default.hash(password, salt);
-    const tempUser = { name, email, password: hashedPassword };
-    const user = yield user_model_1.default.create(Object.assign({}, tempUser));
-    // ISSUED TOKEN HERE...
-    const token = jsonwebtoken_1.default.sign({ userId: user._id, name: user.name, email: user.email }, process.env.JWT_SECRET, {
-        expiresIn: "1d",
-    });
+    // PASSWORD HASHED IN MODEL SCHEMA
+    const user = yield user_model_1.default.create(Object.assign({}, req.body));
+    // TOKEN GENERATED IN MODEL SCHEMA
+    const token = user.createJWT();
     res.status(http_status_codes_1.StatusCodes.CREATED).json({
         msg: "USER_REGISTERED",
         user: { name: user.name, email: user.email },
@@ -40,6 +32,28 @@ const REGISTER = (0, asyncMiddleware_1.asyncMiddleware)((req, res, next) => __aw
 }));
 exports.REGISTER = REGISTER;
 const LOGIN = (0, asyncMiddleware_1.asyncMiddleware)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    res.send("Login User");
+    const { email, password } = req.body;
+    // CHECK REQUEST BODY
+    if (!email || !password) {
+        throw new BadRequestError_1.default("No email or password provided");
+    }
+    // FIND EXISTING EMAIL
+    const user = yield user_model_1.default.findOne({ email });
+    // IF NOT FOUND THROW ERROR
+    if (!user) {
+        throw new errors_1.UnAuthenticatedError(`No user associated with the email: ${email}`);
+    }
+    const isPasswordCorrect = yield user.comparePassword(password);
+    if (!isPasswordCorrect) {
+        throw new errors_1.UnAuthenticatedError(`Password dont match`);
+    }
+    // RELEASED TOKEN HERE
+    const token = user.createJWT();
+    // SEND BACK RESPONSE TO THE CLIENT
+    res.status(http_status_codes_1.StatusCodes.OK).json({
+        msg: "USER_LOGIN",
+        user: { name: user.name, email: user.email },
+        token,
+    });
 }));
 exports.LOGIN = LOGIN;

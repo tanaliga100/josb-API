@@ -1,6 +1,11 @@
+const user = {
+  name: "jordan",
+  email: "jordan@mail.com",
+  password: "password",
+};
 const fetchEndpoints = async () => {
   try {
-    const response = await fetch("/api/v1/auth/register", {
+    const response = await fetch("/api/v1/auth/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -13,18 +18,10 @@ const fetchEndpoints = async () => {
     console.log({ error });
   }
 };
-
-window.onload = () => {
+document.querySelector("button").addEventListener("click", function () {
   fetchEndpoints();
-};
-
-console.log("Client listening");
-
-const user = {
-  name: "lara",
-  email: "lara@gmail.com",
-  password: "password",
-};
+  console.log("fired");
+});
 
 const APIResponse = (data) => {
   console.log({ data });
