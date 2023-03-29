@@ -1,5 +1,8 @@
+import cors from "cors";
 import dotenv from "dotenv";
 import express, { Express, NextFunction, Request, Response } from "express";
+import rateLimit from "express-rate-limit";
+import helmet from "helmet";
 import morgan from "morgan";
 import path from "path";
 import { connectDB } from "./config/connectDB";
@@ -10,13 +13,26 @@ import { router as authRoute } from "./routes/auth-route";
 import { router as jobsRoute } from "./routes/jobs-route";
 
 dotenv.config();
-console.log(process.env);
 
 const app: Express = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(morgan("dev"));
+
+// SECURITY PACKAGES
+app.use(helmet());
+app.use(cors());
+app.use(
+  rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+    standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+    legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+  })
+);
+app.set("trust proxy", 1);
+
 // ROUTES
 // app.get("/", (req: Request, res: Response) => {
 //   res.json({ msg: "Server Alive : Express Ts" });

@@ -41,3 +41,8 @@ interface MyRequest extends Request {
   myCustomProperty: string;
   myCustomMethod(): void;
 }
+
+export interface IQuery {
+  position?: string;
+  company?: string;
+}

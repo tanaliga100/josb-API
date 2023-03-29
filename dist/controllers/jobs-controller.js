@@ -18,12 +18,30 @@ const errors_1 = require("../errors");
 const async_middleware_1 = require("../middlewares/async-middleware");
 const job_model_1 = __importDefault(require("../models/job-model"));
 const GET_JOBS = (0, async_middleware_1.asyncMiddleware)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const { user: { _id: userId }, } = req;
+    const { search } = req.query;
     // GET THE JOBS ASSOCIATED WITH CURRENT USER;
-    console.log("FROM CONTROLLER", req.user);
-    const job = yield job_model_1.default.find({ createdBy: req.user._id }).sort("createdAt");
+    let queryObject = {
+        createdBy: userId,
+    };
+    // SEARCH ALL PROPERTIES
+    if (search != undefined && search != "") {
+        queryObject = {
+            $or: [
+                { createdBy: userId, company: { $regex: search, $options: "i" } },
+                { createdBy: userId, position: { $regex: search, $options: "i" } },
+            ],
+        };
+    }
+    console.log({ queryObject });
+    const result = job_model_1.default.find(queryObject);
+    if (!result) {
+        throw new errors_1.NotFoundError(`WE CANNOT FIND WHAT YOU ARE LOOKING FOR `);
+    }
+    const job = yield result;
     res
         .status(http_status_codes_1.StatusCodes.OK)
-        .json({ msg: "ALL_JOBS", length: job.length, job });
+        .json({ msg: "ALL_JOBS", length: job === null || job === void 0 ? void 0 : job.length, job });
 }));
 exports.GET_JOBS = GET_JOBS;
 const GET_JOB = (0, async_middleware_1.asyncMiddleware)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {

@@ -1,21 +1,42 @@
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { BadRequestError, NotFoundError } from "../errors";
-import { IUser } from "../interfaces/all.interfaces";
+import { IQuery, IUser } from "../interfaces/all.interfaces";
 import { asyncMiddleware } from "../middlewares/async-middleware";
 import Job from "../models/job-model";
 
 const GET_JOBS = asyncMiddleware(
   async (req: any, res: Response, next: NextFunction) => {
+    const {
+      user: { _id: userId },
+    } = req;
+    const { search } = req.query;
     // GET THE JOBS ASSOCIATED WITH CURRENT USER;
-    console.log("FROM CONTROLLER", req.user);
-    const job = await Job.find({ createdBy: req.user._id }).sort("createdAt");
+    let queryObject: any = {
+      createdBy: userId,
+    };
+    // SEARCH ALL PROPERTIES
+    if (search != undefined && search != "") {
+      queryObject = {
+        $or: [
+          { createdBy: userId, company: { $regex: search, $options: "i" } },
+          { createdBy: userId, position: { $regex: search, $options: "i" } },
+        ],
+      };
+    }
+
+    console.log({ queryObject });
+
+    const result = Job.find(queryObject);
+    if (!result) {
+      throw new NotFoundError(`WE CANNOT FIND WHAT YOU ARE LOOKING FOR `);
+    }
+    const job = await result;
     res
       .status(StatusCodes.OK)
-      .json({ msg: "ALL_JOBS", length: job.length, job });
+      .json({ msg: "ALL_JOBS", length: job?.length, job });
   }
 );
-
 const GET_JOB = asyncMiddleware(
   async (req: any, res: Response, next: NextFunction) => {
     const {
