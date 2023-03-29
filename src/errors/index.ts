@@ -1,4 +1,4 @@
-import BadRequestError from "./BadRequestError";
+import BadRequestError from "./BadrequestError";
 import CustomError from "./CustomError";
 import UnAuthenticatedError from "./UnauthenticatedError";
 

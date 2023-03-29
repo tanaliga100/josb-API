@@ -14,17 +14,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const errors_1 = require("../errors");
-const BadRequestError_1 = __importDefault(require("../errors/BadRequestError"));
 const user_model_1 = __importDefault(require("../models/user-model"));
 const authenticationMiddleware = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     //CHECK HEADER
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith("Bearer")) {
-        return next(new BadRequestError_1.default("NO TOKEN PROVIDED"));
+        return next(new errors_1.UnAuthenticatedError("NO TOKEN PROVIDED"));
     }
     const token = authHeader.split(" ")[1];
     try {
         const payload = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
+        console.log({ payload });
         const user = yield user_model_1.default.findById(payload.userId).select("-password");
         req.user = user;
         next();

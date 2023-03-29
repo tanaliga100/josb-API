@@ -19,17 +19,24 @@ export interface IUser {
   password: string;
   _id: ObjectId;
   __v: number;
-  user: IPayload;
+  user?: IPayload;
 }
 
 export interface IPayload {
-  userPayload: { myCustomProperty: string };
+  userPayload: any;
 }
 export interface IUserMethods {
   createJWT: () => void;
   fullName(): string;
 }
 
+export interface IJobs {
+  company: string;
+  position: string;
+  status: Status[];
+  createdBy: string;
+}
+export type Status = string;
 interface MyRequest extends Request {
   myCustomProperty: string;
   myCustomMethod(): void;

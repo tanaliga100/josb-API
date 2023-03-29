@@ -3,9 +3,9 @@ import express, { Express, NextFunction, Request, Response } from "express";
 import morgan from "morgan";
 import path from "path";
 import { connectDB } from "./config/connectDB";
-import authenticationMiddleware from "./middlewares/authenticationMiddleware";
-import { errorHandlerMidlleware } from "./middlewares/errorHandlerMiddleware";
-import { notFoundMiddleware } from "./middlewares/notFoundMiddleware";
+import authenticationMiddleware from "./middlewares/authentication-middleware";
+import { errorHandlerMidlleware } from "./middlewares/errorHandler-middleware";
+import { notFoundMiddleware } from "./middlewares/notFound-middleware";
 import { router as authRoute } from "./routes/auth-route";
 import { router as jobsRoute } from "./routes/jobs-route";
 

@@ -43,5 +43,5 @@ UserSchema.methods.comparePassword = async function (candidatePassword: any) {
   const isMatch = await bcrypt.compare(candidatePassword, this.password);
   return isMatch;
 };
-const User = mongoose.model("Users", UserSchema);
+const User = mongoose.model("User", UserSchema);
 export default User;
