@@ -66,7 +66,7 @@ const DELETE_JOB = (0, async_middleware_1.asyncMiddleware)((req, res, next) => _
     if (!job) {
         throw new errors_1.NotFoundError(`JOB WITH THIS ID : ${jobId} DOESNT EXIST`);
     }
-    const updated = yield job_model_1.default.find({}).sort("createdBy");
+    const updated = yield job_model_1.default.find({ createdBy: req.user._id }).sort("createdBy");
     res.status(http_status_codes_1.StatusCodes.OK).send({ msg: "JOB_DELETED", updated });
 }));
 exports.DELETE_JOB = DELETE_JOB;

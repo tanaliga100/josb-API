@@ -77,7 +77,9 @@ const DELETE_JOB = asyncMiddleware(
     if (!job) {
       throw new NotFoundError(`JOB WITH THIS ID : ${jobId} DOESNT EXIST`);
     }
-    const updated = await Job.find({}).sort("createdBy");
+    const updated = await Job.find({ createdBy: req.user._id }).sort(
+      "createdBy"
+    );
     res.status(StatusCodes.OK).send({ msg: "JOB_DELETED", updated });
   }
 );
