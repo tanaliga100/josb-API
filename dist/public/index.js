@@ -1,7 +1,7 @@
 const user = {
-  name: "jordan",
-  email: "jordan@mail.com",
-  password: "password",
+  // name: "jordan",
+  // email: "jordan@mail.com",
+  // password: "password",
 };
 const registerHandler = async () => {
   try {

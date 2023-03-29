@@ -28,7 +28,7 @@ const LOGIN = asyncMiddleware(
     const { email, password } = req.body;
     // CHECK REQUEST BODY
     if (!email || !password) {
-      throw new BadRequestError("No email or password provided");
+      throw new BadRequestError("");
     }
     // FIND EXISTING EMAIL
     const user = await User.findOne({ email });

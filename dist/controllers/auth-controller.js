@@ -35,7 +35,7 @@ const LOGIN = (0, async_middleware_1.asyncMiddleware)((req, res, next) => __awai
     const { email, password } = req.body;
     // CHECK REQUEST BODY
     if (!email || !password) {
-        throw new BadRequestError_1.default("No email or password provided");
+        throw new BadRequestError_1.default("");
     }
     // FIND EXISTING EMAIL
     const user = yield user_model_1.default.findOne({ email });
