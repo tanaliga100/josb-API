@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UPDATE_JOB = exports.GET_JOBS = exports.GET_JOB = exports.DELETE_JOB = exports.CREATE_JOB = void 0;
 const http_status_codes_1 = require("http-status-codes");
+const errors_1 = require("../errors");
 const async_middleware_1 = require("../middlewares/async-middleware");
 const job_model_1 = __importDefault(require("../models/job-model"));
 const GET_JOBS = (0, async_middleware_1.asyncMiddleware)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -26,7 +27,12 @@ const GET_JOBS = (0, async_middleware_1.asyncMiddleware)((req, res, next) => __a
 }));
 exports.GET_JOBS = GET_JOBS;
 const GET_JOB = (0, async_middleware_1.asyncMiddleware)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    res.send("Singe Job");
+    const { user: { _id }, params: { id: jobId }, } = req;
+    const job = yield job_model_1.default.findOne({ _id: jobId, createdBy: _id });
+    if (!job) {
+        throw new errors_1.NotFoundError("NO JOB ASSOCIATED WITH ID :" + jobId);
+    }
+    res.status(http_status_codes_1.StatusCodes.OK).json({ msg: "SINGLE_JOB ", job });
 }));
 exports.GET_JOB = GET_JOB;
 const CREATE_JOB = (0, async_middleware_1.asyncMiddleware)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -37,10 +43,30 @@ const CREATE_JOB = (0, async_middleware_1.asyncMiddleware)((req, res, next) => _
 }));
 exports.CREATE_JOB = CREATE_JOB;
 const UPDATE_JOB = (0, async_middleware_1.asyncMiddleware)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    res.send("Update Job");
+    const { user: { _id }, params: { id: jobId }, body: { company, position }, } = req;
+    if (company === "" || position === "") {
+        throw new errors_1.BadRequestError("Company or Position must be specified");
+    }
+    const job = yield job_model_1.default.findOneAndUpdate({ _id: jobId, createdBy: _id }, req.body, {
+        new: true,
+        runValidators: true,
+    });
+    if (!job) {
+        throw new errors_1.NotFoundError("NO JOB ASSOCIATED WITH ID :" + jobId);
+    }
+    res.status(http_status_codes_1.StatusCodes.OK).json({ msg: "UPDATED_JOB ", job });
 }));
 exports.UPDATE_JOB = UPDATE_JOB;
 const DELETE_JOB = (0, async_middleware_1.asyncMiddleware)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    res.send("Delete Job");
+    const { user: { _id }, params: { id: jobId }, } = req;
+    const job = yield job_model_1.default.findOneAndDelete({
+        _id: jobId,
+        createdBy: _id,
+    });
+    if (!job) {
+        throw new errors_1.NotFoundError(`JOB WITH THIS ID : ${jobId} DOESNT EXIST`);
+    }
+    const updated = yield job_model_1.default.find({}).sort("createdBy");
+    res.status(http_status_codes_1.StatusCodes.OK).send({ msg: "JOB_DELETED", updated });
 }));
 exports.DELETE_JOB = DELETE_JOB;

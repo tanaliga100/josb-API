@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.REGISTER = exports.LOGIN = void 0;
 const http_status_codes_1 = require("http-status-codes");
 const errors_1 = require("../errors");
-const BadrequestError_1 = __importDefault(require("../errors/BadrequestError"));
+const BadRequestError_1 = __importDefault(require("../errors/BadRequestError"));
 const async_middleware_1 = require("../middlewares/async-middleware");
 const user_model_1 = __importDefault(require("../models/user-model"));
 const REGISTER = (0, async_middleware_1.asyncMiddleware)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -35,7 +35,7 @@ const LOGIN = (0, async_middleware_1.asyncMiddleware)((req, res, next) => __awai
     const { email, password } = req.body;
     // CHECK REQUEST BODY
     if (!email || !password) {
-        throw new BadrequestError_1.default("No email or password provided");
+        throw new BadRequestError_1.default("No email or password provided");
     }
     // FIND EXISTING EMAIL
     const user = yield user_model_1.default.findOne({ email });

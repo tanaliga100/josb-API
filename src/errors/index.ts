@@ -1,5 +1,6 @@
-import BadRequestError from "./BadrequestError";
+import BadRequestError from "./BadRequestError";
 import CustomError from "./CustomError";
+import NotFoundError from "./NotFoundError";
 import UnAuthenticatedError from "./UnauthenticatedError";
 
-export { BadRequestError, CustomError, UnAuthenticatedError };
+export { BadRequestError, CustomError, NotFoundError, UnAuthenticatedError };

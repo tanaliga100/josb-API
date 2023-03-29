@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
+import { BadRequestError, NotFoundError } from "../errors";
 import { IUser } from "../interfaces/all.interfaces";
 import { asyncMiddleware } from "../middlewares/async-middleware";
 import Job from "../models/job-model";
@@ -16,8 +17,16 @@ const GET_JOBS = asyncMiddleware(
 );
 
 const GET_JOB = asyncMiddleware(
-  async (req: Request, res: Response, next: NextFunction) => {
-    res.send("Singe Job");
+  async (req: any, res: Response, next: NextFunction) => {
+    const {
+      user: { _id },
+      params: { id: jobId },
+    } = req;
+    const job = await Job.findOne({ _id: jobId, createdBy: _id });
+    if (!job) {
+      throw new NotFoundError("NO JOB ASSOCIATED WITH ID :" + jobId);
+    }
+    res.status(StatusCodes.OK).json({ msg: "SINGLE_JOB ", job });
   }
 );
 
@@ -31,14 +40,45 @@ const CREATE_JOB = asyncMiddleware(
 );
 
 const UPDATE_JOB = asyncMiddleware(
-  async (req: Request, res: Response, next: NextFunction) => {
-    res.send("Update Job");
+  async (req: any, res: Response, next: NextFunction) => {
+    const {
+      user: { _id },
+      params: { id: jobId },
+      body: { company, position },
+    } = req;
+    if (company === "" || position === "") {
+      throw new BadRequestError("Company or Position must be specified");
+    }
+    const job = await Job.findOneAndUpdate(
+      { _id: jobId, createdBy: _id },
+      req.body,
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
+    if (!job) {
+      throw new NotFoundError("NO JOB ASSOCIATED WITH ID :" + jobId);
+    }
+    res.status(StatusCodes.OK).json({ msg: "UPDATED_JOB ", job });
   }
 );
 
 const DELETE_JOB = asyncMiddleware(
-  async (req: Request, res: Response, next: NextFunction) => {
-    res.send("Delete Job");
+  async (req: any, res: Response, next: NextFunction) => {
+    const {
+      user: { _id },
+      params: { id: jobId },
+    } = req;
+    const job = await Job.findOneAndDelete({
+      _id: jobId,
+      createdBy: _id,
+    });
+    if (!job) {
+      throw new NotFoundError(`JOB WITH THIS ID : ${jobId} DOESNT EXIST`);
+    }
+    const updated = await Job.find({}).sort("createdBy");
+    res.status(StatusCodes.OK).send({ msg: "JOB_DELETED", updated });
   }
 );
 export { CREATE_JOB, DELETE_JOB, GET_JOB, GET_JOBS, UPDATE_JOB };
