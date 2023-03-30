@@ -1,7 +1,7 @@
 const user = {
-  // name: "jordan",
-  // email: "jordan@mail.com",
-  // password: "password",
+  name: "dan",
+  email: "dan@mail.com",
+  password: "secret123",
 };
 const registerHandler = async () => {
   try {
@@ -18,6 +18,7 @@ const registerHandler = async () => {
     console.log({ error });
   }
 };
+
 document.querySelector(".register").addEventListener("click", function () {
   registerHandler();
   console.log("register handler fired");

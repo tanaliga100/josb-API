@@ -1,8 +1,6 @@
 import bcrypt from "bcryptjs";
-import NextFunction from "express";
 import jwt from "jsonwebtoken";
 import mongoose, { Schema } from "mongoose";
-import { IRegisterUser, IUserMethods } from "../interfaces/all.interfaces";
 const UserSchema: Schema = new mongoose.Schema({
   name: {
     type: String,
@@ -26,9 +24,11 @@ const UserSchema: Schema = new mongoose.Schema({
     maxlength: 100,
   },
 });
+
 // HASHED PASSWORD BEFORE SUBMITTING
 UserSchema.pre("save", async function (): Promise<any> {
-  this.password = await bcrypt.hash(this.password, 12);
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
 });
 // CREATION OF TOKEN HERE
 UserSchema.methods.createJWT = function () {

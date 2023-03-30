@@ -1,7 +1,6 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { BadRequestError, NotFoundError } from "../errors";
-import { IQuery, IUser } from "../interfaces/all.interfaces";
 import { asyncMiddleware } from "../middlewares/async-middleware";
 import Job from "../models/job-model";
 
@@ -24,7 +23,6 @@ const GET_JOBS = asyncMiddleware(
         ],
       };
     }
-
     console.log({ queryObject });
 
     const result = Job.find(queryObject);
@@ -37,6 +35,7 @@ const GET_JOBS = asyncMiddleware(
       .json({ msg: "ALL_JOBS", length: job?.length, job });
   }
 );
+
 const GET_JOB = asyncMiddleware(
   async (req: any, res: Response, next: NextFunction) => {
     const {

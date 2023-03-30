@@ -1,6 +1,6 @@
 import cors from "cors";
 import dotenv from "dotenv";
-import express, { Express, NextFunction, Request, Response } from "express";
+import { Express, default as express } from "express";
 import rateLimit from "express-rate-limit";
 import helmet from "helmet";
 import morgan from "morgan";
@@ -32,7 +32,6 @@ app.use(
   })
 );
 app.set("trust proxy", 1);
-
 // ROUTES
 // app.get("/", (req: Request, res: Response) => {
 //   res.json({ msg: "Server Alive : Express Ts" });

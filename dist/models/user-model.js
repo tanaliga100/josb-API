@@ -41,7 +41,8 @@ const UserSchema = new mongoose_1.default.Schema({
 // HASHED PASSWORD BEFORE SUBMITTING
 UserSchema.pre("save", function () {
     return __awaiter(this, void 0, void 0, function* () {
-        this.password = yield bcryptjs_1.default.hash(this.password, 12);
+        const salt = yield bcryptjs_1.default.genSalt(10);
+        this.password = yield bcryptjs_1.default.hash(this.password, salt);
     });
 });
 // CREATION OF TOKEN HERE
