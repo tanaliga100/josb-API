@@ -1,10 +1,7 @@
-import bcrypt, { hash } from "bcryptjs";
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
-import jwt, { Secret } from "jsonwebtoken";
-import { CustomError, UnAuthenticatedError } from "../errors";
+import { UnAuthenticatedError } from "../errors";
 import BadRequestError from "../errors/BadRequestError";
-import { IRegisterUser } from "../interfaces/all.interfaces";
 import { asyncMiddleware } from "../middlewares/async-middleware";
 import User from "../models/user-model";
 
