@@ -1,23 +1,22 @@
 import cors from "cors";
 import dotenv from "dotenv";
-import { Express, default as express } from "express";
+import { Express, Request, Response, default as express } from "express";
 import rateLimit from "express-rate-limit";
 import helmet from "helmet";
 import morgan from "morgan";
-import path from "path";
+import * as swaggerUI from "swagger-ui-express";
 import { connectDB } from "./config/connectDB";
 import authenticationMiddleware from "./middlewares/authentication-middleware";
 import { errorHandlerMidlleware } from "./middlewares/errorHandler-middleware";
 import { notFoundMiddleware } from "./middlewares/notFound-middleware";
 import { router as authRoute } from "./routes/auth-route";
 import { router as jobsRoute } from "./routes/jobs-route";
-
 dotenv.config();
 
 const app: Express = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, "public")));
+// app.use(express.static(path.join(__dirname, "public")));
 app.use(morgan("dev"));
 
 // SECURITY PACKAGES
@@ -32,10 +31,24 @@ app.use(
   })
 );
 app.set("trust proxy", 1);
+const swaggerDocs = require("../openapi.json");
+app.use(
+  "/api-docs",
+  swaggerUI.serve,
+  swaggerUI.setup(undefined, {
+    swaggerOptions: {
+      spec: swaggerDocs,
+    },
+  })
+);
 // ROUTES
-// app.get("/", (req: Request, res: Response) => {
-//   res.json({ msg: "Server Alive : Express Ts" });
-// });
+app.get("/", (req: Request, res: Response) => {
+  res.send(`
+  <h1>API_DOCS</h1>
+  <a href="/api-docs">See Documentation</a>
+  `);
+});
+
 app.use("/api/v1/auth", authRoute);
 app.use("/api/v1/jobs", authenticationMiddleware, jobsRoute);
 
@@ -55,4 +68,5 @@ const start = async () => {
     console.log("Something went wrong");
   }
 };
+
 start();
