@@ -1,5 +1,3 @@
-import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
 import mongoose, { Schema } from "mongoose";
 const JobSchema: Schema = new mongoose.Schema(
   {

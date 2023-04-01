@@ -14,14 +14,6 @@ export const errorHandlerMidlleware = (
     statusCode: err.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
     msg: err.message || "Something went wrong",
   };
-  // if (err instanceof CustomError) {
-  //   return res.status(StatusCodes.BAD_REQUEST).json({
-  //     error: {
-  //       message: err.message,
-  //       statusCode: StatusCodes.BAD_REQUEST,
-  //     },
-  //   });
-  // }
 
   // VALIDATION ERROR HANDLER
   if (err.name === "ValidationError") {

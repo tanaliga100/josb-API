@@ -77,8 +77,8 @@ app.get("/", (req, res) => {
   <a href="/api-docs">See Documentation</a>
   `);
 });
-app.use("/api/v1/auth", auth_route_1.router);
-app.use("/api/v1/jobs", authentication_middleware_1.default, jobs_route_1.router);
+app.use("/api/v1/auth", auth_route_1.AuthRoute);
+app.use("/api/v1/jobs", authentication_middleware_1.default, jobs_route_1.JobsRoute);
 // 404 MIDDLEWARE
 app.use(notFound_middleware_1.notFoundMiddleware);
 // ERROR MIDDLEWARE

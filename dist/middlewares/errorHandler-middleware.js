@@ -10,14 +10,6 @@ const errorHandlerMidlleware = (err, req, res, next) => {
         statusCode: err.statusCode || http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR,
         msg: err.message || "Something went wrong",
     };
-    // if (err instanceof CustomError) {
-    //   return res.status(StatusCodes.BAD_REQUEST).json({
-    //     error: {
-    //       message: err.message,
-    //       statusCode: StatusCodes.BAD_REQUEST,
-    //     },
-    //   });
-    // }
     // VALIDATION ERROR HANDLER
     if (err.name === "ValidationError") {
         console.log(Object.values(err.errors));

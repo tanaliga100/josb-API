@@ -9,8 +9,8 @@ import { connectDB } from "./config/connectDB";
 import authenticationMiddleware from "./middlewares/authentication-middleware";
 import { errorHandlerMidlleware } from "./middlewares/errorHandler-middleware";
 import { notFoundMiddleware } from "./middlewares/notFound-middleware";
-import { router as authRoute } from "./routes/auth-route";
-import { router as jobsRoute } from "./routes/jobs-route";
+import { AuthRoute } from "./routes/auth-route";
+import { JobsRoute } from "./routes/jobs-route";
 dotenv.config();
 
 const app: Express = express();
@@ -49,8 +49,8 @@ app.get("/", (req: Request, res: Response) => {
   `);
 });
 
-app.use("/api/v1/auth", authRoute);
-app.use("/api/v1/jobs", authenticationMiddleware, jobsRoute);
+app.use("/api/v1/auth", AuthRoute);
+app.use("/api/v1/jobs", authenticationMiddleware, JobsRoute);
 
 // 404 MIDDLEWARE
 app.use(notFoundMiddleware);
