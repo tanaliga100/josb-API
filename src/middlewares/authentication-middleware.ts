@@ -15,7 +15,6 @@ const authenticationMiddleware = async (
   const token = authHeader.split(" ")[1];
   try {
     const payload: any = jwt.verify(token, process.env.JWT_SECRET as string);
-    console.log({ payload });
     const user = await User.findById(payload.userId).select("-password");
     req.user = user;
     next();
@@ -27,5 +26,4 @@ const authenticationMiddleware = async (
     );
   }
 };
-
 export default authenticationMiddleware;
