@@ -1,16 +1,14 @@
 import cors from "cors";
 import dotenv from "dotenv";
 import { Express, Request, Response, default as express } from "express";
-import rateLimit from "express-rate-limit";
 import helmet from "helmet";
 import morgan from "morgan";
-import * as swaggerUI from "swagger-ui-express";
 import { connectDB } from "./config/connectDB";
-import authenticationMiddleware from "./middlewares/authentication-middleware";
 import { errorHandlerMidlleware } from "./middlewares/errorHandler-middleware";
 import { notFoundMiddleware } from "./middlewares/notFound-middleware";
 import { AuthRoute } from "./routes/auth-route";
 import { JobsRoute } from "./routes/jobs-route";
+import { UserRoute } from "./routes/user-route";
 dotenv.config();
 
 const app: Express = express();
@@ -22,35 +20,18 @@ app.use(morgan("dev"));
 // SECURITY PACKAGES
 app.use(helmet());
 app.use(cors());
-app.use(
-  rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
-    standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
-    legacyHeaders: false, // Disable the `X-RateLimit-*` headers
-  })
-);
+
 app.set("trust proxy", 1);
-const swaggerDocs = require("../openapi.json");
-app.use(
-  "/api-docs",
-  swaggerUI.serve,
-  swaggerUI.setup(undefined, {
-    swaggerOptions: {
-      spec: swaggerDocs,
-    },
-  })
-);
 // ROUTES
 app.get("/", (req: Request, res: Response) => {
   res.send(`
-  <h1>API_DOCS</h1>
-  <a href="/api-docs">See Documentation</a>
+  <h1>JobsAPI</h1>
   `);
 });
 
 app.use("/api/v1/auth", AuthRoute);
-app.use("/api/v1/jobs", authenticationMiddleware, JobsRoute);
+app.use("/api/v1/user", UserRoute);
+app.use("/api/v1/jobs", JobsRoute);
 
 // 404 MIDDLEWARE
 app.use(notFoundMiddleware);

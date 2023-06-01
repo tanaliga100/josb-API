@@ -24,7 +24,6 @@ const authenticationMiddleware = (req, res, next) => __awaiter(void 0, void 0, v
     const token = authHeader.split(" ")[1];
     try {
         const payload = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
-        console.log({ payload });
         const user = yield user_model_1.default.findById(payload.userId).select("-password");
         req.user = user;
         next();
