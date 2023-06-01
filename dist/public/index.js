@@ -1,8 +1,9 @@
 const user = {
-  name: "dan",
-  email: "dan@mail.com",
+  name: "kimmy100",
+  email: "kimmy100@mail.com",
   password: "secret123",
 };
+
 const registerHandler = async () => {
   try {
     const response = await fetch("/api/v1/auth/register", {
@@ -24,11 +25,13 @@ document.querySelector(".register").addEventListener("click", function () {
   console.log("register handler fired");
 });
 const loginHandler = async () => {
+  const currentToken = localStorage.getItem("token");
   try {
     const response = await fetch("/api/v1/auth/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${currentToken}`,
       },
       body: JSON.stringify(user),
     });
@@ -44,8 +47,13 @@ document.querySelector(".login").addEventListener("click", function () {
   console.log("login handler fired");
 });
 
+document.querySelector(".logout").addEventListener("click", function () {
+  localStorage.removeItem("token");
+  console.log("logout handler fired");
+});
+
 // TOKEN PERSIST
 const APIResponse = (data) => {
-  console.log({ data });
+  console.log(data);
   localStorage.setItem("token", data.token);
 };

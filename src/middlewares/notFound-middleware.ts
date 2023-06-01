@@ -1,4 +1,4 @@
-import express, { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 
 export const notFoundMiddleware = (
