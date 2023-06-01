@@ -55,7 +55,7 @@ const LOGIN = asyncMiddleware(
     // CHECK DB: FIND THE ID IN THE DATABSE ||
     const loggedInUser = await User.findOne({ email });
     if (!loggedInUser) {
-      throw new BadRequestError("No Email Found");
+      throw new BadRequestError("You provided a non-existing email");
     }
     loggedInUser.toJSON = function () {
       const userObject = this?.toObject();
@@ -67,7 +67,6 @@ const LOGIN = asyncMiddleware(
     // GENERATE : CREATE TOKEN
     const token = createToken(loggedInUser);
     // RESPONSE: SENDS BACK THE RESPONSE | OMIT THE PASSWORD
-
     res.status(StatusCodes.OK).json({
       msg: "USER_LOGIN",
       data: loggedInUser,

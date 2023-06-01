@@ -64,7 +64,7 @@ const LOGIN = (0, async_middleware_1.asyncMiddleware)((req, res, next) => __awai
     // CHECK DB: FIND THE ID IN THE DATABSE ||
     const loggedInUser = yield user_model_1.default.findOne({ email });
     if (!loggedInUser) {
-        throw new errors_1.BadRequestError("No Email Found");
+        throw new errors_1.BadRequestError("You provided a non-existing email");
     }
     loggedInUser.toJSON = function () {
         const userObject = this === null || this === void 0 ? void 0 : this.toObject();

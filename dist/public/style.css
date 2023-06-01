@@ -18,7 +18,9 @@ section {
   display: flex;
   padding-top: 1rem;
   gap: 1rem;
+  width: 60%;
   text-align: center;
+  margin: auto;
   justify-content: center;
 }
 button {
