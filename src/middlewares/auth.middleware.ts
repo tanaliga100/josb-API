@@ -1,12 +1,11 @@
 import { NextFunction, Response } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { UnAuthenticatedError } from "../errors";
-import User from "../models/user-model";
-import { asyncMiddleware } from "./async-middleware";
+import User from "../models/user.model";
+import { asyncMiddleware } from "./async.middleware";
 const authenticationMiddleware = asyncMiddleware(
   async (req: any, res: Response, next: NextFunction) => {
     // CHECK AUTH-HEADER
-
     const authHeader = req.headers.authorization;
 
     if (!authHeader || !authHeader.startsWith("Bearer")) {
@@ -22,15 +21,15 @@ const authenticationMiddleware = asyncMiddleware(
 
       // LOOK FOR THE VALUE IN THE DATABASE IF ITS EXISTED;
       const user = await User.find({ _id: userId }).select("-password");
+      console.log("USER FROM AUTH", user);
+
       // PASSED THE DECODED VALUES AS USER OBJECT AND RECEIVES IT IN THE LOGIN CONTROLLER
-      req.user = user;
+      req.user = user[0];
       next();
     } catch (error) {
       console.log(error);
 
-      throw new UnAuthenticatedError(
-        "UNAUTHORIZED: Not authorized to access this route"
-      );
+      throw new UnAuthenticatedError("UNAUTHORIZED: Authentication Failed");
     }
   }
 );

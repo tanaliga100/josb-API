@@ -3,12 +3,13 @@ import { Express, Request, Response, default as express } from "express";
 import morgan from "morgan";
 import path from "path";
 import { connectDB } from "./config/connectDB";
-import authenticationMiddleware from "./middlewares/authentication-middleware";
-import { errorHandlerMidlleware } from "./middlewares/errorHandler-middleware";
-import { notFoundMiddleware } from "./middlewares/notFound-middleware";
-import { AuthRoute } from "./routes/auth-route";
-import { JobsRoute } from "./routes/jobs-route";
-import { UserRoute } from "./routes/user-route";
+import authenticationMiddleware from "./middlewares/auth.middleware";
+import { errorHandlerMidlleware } from "./middlewares/errorHandler.middleware";
+import { notFoundMiddleware } from "./middlewares/notFound.middleware";
+import { AuthRoute } from "./routes/auth.routes";
+import { JobsRoute } from "./routes/jobs.routes";
+import { UserRoute } from "./routes/user.routes";
+
 dotenv.config();
 
 const app: Express = express();

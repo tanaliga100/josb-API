@@ -14,7 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const errors_1 = require("../errors");
-const user_model_1 = __importDefault(require("../models/user-model"));
+const user_model_1 = __importDefault(require("../models/user.model"));
 const async_middleware_1 = require("./async.middleware");
 const authenticationMiddleware = (0, async_middleware_1.asyncMiddleware)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     // CHECK AUTH-HEADER
@@ -30,13 +30,14 @@ const authenticationMiddleware = (0, async_middleware_1.asyncMiddleware)((req, r
         const { name, _id: userId, email } = decoded;
         // LOOK FOR THE VALUE IN THE DATABASE IF ITS EXISTED;
         const user = yield user_model_1.default.find({ _id: userId }).select("-password");
+        console.log("USER FROM AUTH", user);
         // PASSED THE DECODED VALUES AS USER OBJECT AND RECEIVES IT IN THE LOGIN CONTROLLER
-        req.user = user;
+        req.user = user[0];
         next();
     }
     catch (error) {
         console.log(error);
-        throw new errors_1.UnAuthenticatedError("UNAUTHORIZED: Not authorized to access this route");
+        throw new errors_1.UnAuthenticatedError("UNAUTHORIZED: Authentication Failed");
     }
 }));
 exports.default = authenticationMiddleware;

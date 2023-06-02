@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { BadRequestError } from "../errors";
-import { asyncMiddleware } from "../middlewares/async-middleware";
-import User from "../models/user-model";
+import { asyncMiddleware } from "../middlewares/async.middleware";
+import User from "../models/user.model";
 import comparePassword from "../utils/comparePassword";
 import createToken from "../utils/createToken";
 import hashedPassword from "../utils/hashedPassword";

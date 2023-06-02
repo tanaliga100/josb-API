@@ -3,12 +3,12 @@ const JobSchema: Schema = new mongoose.Schema(
   {
     company: {
       type: String,
-      required: [true, "Please provide a company name"],
+      required: true,
       maxlength: 50,
     },
     position: {
       type: String,
-      required: [true, "Please provide a position"],
+      required: true,
       maxlength: 100,
     },
     status: {
@@ -19,11 +19,16 @@ const JobSchema: Schema = new mongoose.Schema(
     createdBy: {
       type: mongoose.Types.ObjectId,
       ref: "User",
-      required: [true, "Please provide a value"],
+      required: true,
+    },
+    assocUser: {
+      type: mongoose.Schema.Types.String,
+      ref: "User",
+      required: true,
     },
   },
   { timestamps: true }
 );
 
-const Job = mongoose.model("Jobs", JobSchema);
+const Job = mongoose.model("Job", JobSchema);
 export default Job;
