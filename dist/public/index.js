@@ -1,6 +1,6 @@
 const user = {
-  name: "jordan100",
-  email: "jordan100@mail.com",
+  name: "kimmy100",
+  email: "kimmy100@mail.com",
   password: "secret",
 };
 
@@ -14,7 +14,9 @@ const registerHandler = async () => {
       body: JSON.stringify(user),
     });
     const data = await response.json();
-    APIResponse(data);
+    if (data) {
+      APIResponse(data);
+    }
   } catch (error) {
     console.log(error);
   }
@@ -35,10 +37,13 @@ const loginHandler = async () => {
       },
       body: JSON.stringify(user),
     });
+
     const data = await response.json();
-    APIResponse(data);
+    if (data) {
+      APIResponse(data);
+    }
   } catch (error) {
-    console.log(error.error.msg || error.msg);
+    console.log(error);
   }
 };
 
@@ -55,6 +60,7 @@ document.querySelector(".logout").addEventListener("click", function () {
 // API RESPONSE
 const APIResponse = (data) => {
   console.log(data);
+  localStorage.setItem("token", data.token);
   const messageBox = document.createElement("div"); // Create a new div element for the pop-up message
 
   const displayMessage = () => {
@@ -74,7 +80,5 @@ const APIResponse = (data) => {
 
   document.body.appendChild(messageBox); // Add the pop-up message to the document body
 
-  const timeoutID = setTimeout(displayMessage, 1000); // Set the setTimeout
-
-  localStorage.setItem("token", data.token);
+  const timeoutID = setTimeout(displayMessage, 2000); // Set the setTimeout
 };

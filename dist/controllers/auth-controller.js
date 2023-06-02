@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.REGISTER = exports.LOGIN = void 0;
+exports.REGISTER = exports.LOGOUT = exports.LOGIN = void 0;
 const http_status_codes_1 = require("http-status-codes");
 const errors_1 = require("../errors");
 const async_middleware_1 = require("../middlewares/async-middleware");
@@ -61,7 +61,6 @@ const LOGIN = (0, async_middleware_1.asyncMiddleware)((req, res, next) => __awai
     }
     // CHECK DB: FIND THE ID IN THE DATABSE ||
     const loggedInUser = yield user_model_1.default.findOne({ email });
-    console.log(loggedInUser);
     if (!loggedInUser) {
         throw new errors_1.BadRequestError("You provided a non-existing email");
     }
@@ -83,3 +82,9 @@ const LOGIN = (0, async_middleware_1.asyncMiddleware)((req, res, next) => __awai
     });
 }));
 exports.LOGIN = LOGIN;
+const LOGOUT = (0, async_middleware_1.asyncMiddleware)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    res.status(http_status_codes_1.StatusCodes.OK).json({
+        msg: "USER_LOGGED_OUT",
+    });
+}));
+exports.LOGOUT = LOGOUT;

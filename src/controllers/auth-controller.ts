@@ -43,7 +43,7 @@ const REGISTER = asyncMiddleware(
 );
 
 const LOGIN = asyncMiddleware(
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: any, res: Response, next: NextFunction) => {
     const { email, password: plainPassword } = req.body;
     const authHeader = req.headers.authorization;
     // VALIDATE: CHECK IF THE REQUEST BODY ARE FILLED;
@@ -52,7 +52,6 @@ const LOGIN = asyncMiddleware(
     }
     // CHECK DB: FIND THE ID IN THE DATABSE ||
     const loggedInUser = await User.findOne({ email });
-    console.log(loggedInUser);
 
     if (!loggedInUser) {
       throw new BadRequestError("You provided a non-existing email");
@@ -76,4 +75,12 @@ const LOGIN = asyncMiddleware(
   }
 );
 
-export { LOGIN, REGISTER };
+const LOGOUT = asyncMiddleware(
+  async (req: any, res: Response, next: NextFunction) => {
+    res.status(StatusCodes.OK).json({
+      msg: "USER_LOGGED_OUT",
+    });
+  }
+);
+
+export { LOGIN, LOGOUT, REGISTER };

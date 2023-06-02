@@ -3,6 +3,7 @@ import { Express, Request, Response, default as express } from "express";
 import morgan from "morgan";
 import path from "path";
 import { connectDB } from "./config/connectDB";
+import authenticationMiddleware from "./middlewares/authentication-middleware";
 import { errorHandlerMidlleware } from "./middlewares/errorHandler-middleware";
 import { notFoundMiddleware } from "./middlewares/notFound-middleware";
 import { AuthRoute } from "./routes/auth-route";
@@ -29,7 +30,7 @@ app.get("/favicon.ico", (req, res) => {
 });
 app.use("/api/v1/auth", AuthRoute);
 app.use("/api/v1/user", UserRoute);
-app.use("/api/v1/jobs", JobsRoute);
+app.use("/api/v1/jobs", authenticationMiddleware, JobsRoute);
 
 // 404 MIDDLEWARE
 app.use(notFoundMiddleware);

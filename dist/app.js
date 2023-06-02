@@ -17,6 +17,7 @@ const express_1 = __importDefault(require("express"));
 const morgan_1 = __importDefault(require("morgan"));
 const path_1 = __importDefault(require("path"));
 const connectDB_1 = require("./config/connectDB");
+const authentication_middleware_1 = __importDefault(require("./middlewares/authentication-middleware"));
 const errorHandler_middleware_1 = require("./middlewares/errorHandler-middleware");
 const notFound_middleware_1 = require("./middlewares/notFound-middleware");
 const auth_route_1 = require("./routes/auth-route");
@@ -41,7 +42,7 @@ app.get("/favicon.ico", (req, res) => {
 });
 app.use("/api/v1/auth", auth_route_1.AuthRoute);
 app.use("/api/v1/user", user_route_1.UserRoute);
-app.use("/api/v1/jobs", jobs_route_1.JobsRoute);
+app.use("/api/v1/jobs", authentication_middleware_1.default, jobs_route_1.JobsRoute);
 // 404 MIDDLEWARE
 app.use(notFound_middleware_1.notFoundMiddleware);
 // ERROR MIDDLEWARE

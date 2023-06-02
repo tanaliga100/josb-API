@@ -15,23 +15,28 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const errors_1 = require("../errors");
 const user_model_1 = __importDefault(require("../models/user-model"));
-const authenticationMiddleware = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    //CHECK HEADER
+const async_middleware_1 = require("./async-middleware");
+const authenticationMiddleware = (0, async_middleware_1.asyncMiddleware)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    // CHECK AUTH-HEADER
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith("Bearer")) {
-        return next(new errors_1.UnAuthenticatedError("NO TOKEN PROVIDED"));
+        throw new errors_1.UnAuthenticatedError("UNAUTHENTICATED: No Token Provided");
     }
-    const token = authHeader.split(" ")[1];
+    // DECODE THE TOKEN... USING JWT.VERIFY METHOD
     try {
-        const payload = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
-        const user = yield user_model_1.default.findById(payload.userId).select("-password");
+        const authToken = authHeader.split(" ")[1];
+        const jwtSecret = process.env.JWT_SECRET;
+        const decoded = jsonwebtoken_1.default.verify(authToken, jwtSecret);
+        const { name, _id: userId, email } = decoded;
+        // LOOK FOR THE VALUE IN THE DATABASE IF ITS EXISTED;
+        const user = yield user_model_1.default.find({ _id: userId }).select("-password");
+        // PASSED THE DECODED VALUES AS USER OBJECT AND RECEIVES IT IN THE LOGIN CONTROLLER
         req.user = user;
         next();
-        // next();
-        // ATTACH THE USER TO THE JOB ROUTES
     }
     catch (error) {
-        return next(new errors_1.UnAuthenticatedError("NOT AUTHORIZED TO ACCESS THIS ROUTE"));
+        console.log(error);
+        throw new errors_1.UnAuthenticatedError("UNAUTHORIZED: Not authorized to access this route");
     }
-});
+}));
 exports.default = authenticationMiddleware;
