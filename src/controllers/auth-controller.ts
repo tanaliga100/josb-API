@@ -44,26 +44,27 @@ const REGISTER = asyncMiddleware(
 
 const LOGIN = asyncMiddleware(
   async (req: Request, res: Response, next: NextFunction) => {
-    const { email, password } = req.body;
+    const { email, password: plainPassword } = req.body;
     const authHeader = req.headers.authorization;
-    console.log(authHeader);
-    console.log(req.body);
     // VALIDATE: CHECK IF THE REQUEST BODY ARE FILLED;
-    if (!email || !password) {
+    if (!email || !plainPassword) {
       throw new BadRequestError("Please provide all the valid values");
     }
     // CHECK DB: FIND THE ID IN THE DATABSE ||
     const loggedInUser = await User.findOne({ email });
+    console.log(loggedInUser);
+
     if (!loggedInUser) {
       throw new BadRequestError("You provided a non-existing email");
     }
+    // COMPARE: COMPARE THE PASSWORD
+    await comparePassword(plainPassword, loggedInUser.password);
+    // EXCLUDE: OMIT THE PASSWORD BEFORE SENDING BACK THE RESPONSE OBJECT
     loggedInUser.toJSON = function () {
       const userObject = this?.toObject();
       delete userObject.password;
       return userObject;
     };
-    // COMPARE: COMPARE THE PASSWORD
-    await comparePassword(loggedInUser.password, password);
     // GENERATE : CREATE TOKEN
     const token = createToken(loggedInUser);
     // RESPONSE: SENDS BACK THE RESPONSE | OMIT THE PASSWORD

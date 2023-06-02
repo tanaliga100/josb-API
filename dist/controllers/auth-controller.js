@@ -53,26 +53,26 @@ const REGISTER = (0, async_middleware_1.asyncMiddleware)((req, res, next) => __a
 }));
 exports.REGISTER = REGISTER;
 const LOGIN = (0, async_middleware_1.asyncMiddleware)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const { email, password } = req.body;
+    const { email, password: plainPassword } = req.body;
     const authHeader = req.headers.authorization;
-    console.log(authHeader);
-    console.log(req.body);
     // VALIDATE: CHECK IF THE REQUEST BODY ARE FILLED;
-    if (!email || !password) {
+    if (!email || !plainPassword) {
         throw new errors_1.BadRequestError("Please provide all the valid values");
     }
     // CHECK DB: FIND THE ID IN THE DATABSE ||
     const loggedInUser = yield user_model_1.default.findOne({ email });
+    console.log(loggedInUser);
     if (!loggedInUser) {
         throw new errors_1.BadRequestError("You provided a non-existing email");
     }
+    // COMPARE: COMPARE THE PASSWORD
+    yield (0, comparePassword_1.default)(plainPassword, loggedInUser.password);
+    // EXCLUDE: OMIT THE PASSWORD BEFORE SENDING BACK THE RESPONSE OBJECT
     loggedInUser.toJSON = function () {
         const userObject = this === null || this === void 0 ? void 0 : this.toObject();
         delete userObject.password;
         return userObject;
     };
-    // COMPARE: COMPARE THE PASSWORD
-    yield (0, comparePassword_1.default)(loggedInUser.password, password);
     // GENERATE : CREATE TOKEN
     const token = (0, createToken_1.default)(loggedInUser);
     // RESPONSE: SENDS BACK THE RESPONSE | OMIT THE PASSWORD

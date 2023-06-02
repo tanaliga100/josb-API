@@ -14,8 +14,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const errors_1 = require("../errors");
-const comparePassword = (oldPassword, candidatePassword) => __awaiter(void 0, void 0, void 0, function* () {
-    const isValid = yield bcryptjs_1.default.compare(candidatePassword, oldPassword);
+const comparePassword = (plainPassword, oldPassword) => __awaiter(void 0, void 0, void 0, function* () {
+    const isValid = yield bcryptjs_1.default.compare(plainPassword, oldPassword);
     if (!isValid) {
         throw new errors_1.BadRequestError("Password dont match");
     }

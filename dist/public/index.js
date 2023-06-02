@@ -1,7 +1,7 @@
 const user = {
-  name: "kimmy100",
-  email: "kimmy100@mail.com",
-  password: "secret123",
+  name: "jordan100",
+  email: "jordan100@mail.com",
+  password: "secret",
 };
 
 const registerHandler = async () => {
@@ -16,7 +16,7 @@ const registerHandler = async () => {
     const data = await response.json();
     APIResponse(data);
   } catch (error) {
-    console.log({ error });
+    console.log(error);
   }
 };
 
@@ -38,7 +38,7 @@ const loginHandler = async () => {
     const data = await response.json();
     APIResponse(data);
   } catch (error) {
-    console.log({ error });
+    console.log(error.error.msg || error.msg);
   }
 };
 
@@ -52,8 +52,29 @@ document.querySelector(".logout").addEventListener("click", function () {
   console.log("logout handler fired");
 });
 
-// TOKEN PERSIST
+// API RESPONSE
 const APIResponse = (data) => {
   console.log(data);
+  const messageBox = document.createElement("div"); // Create a new div element for the pop-up message
+
+  const displayMessage = () => {
+    messageBox.style.display = "none"; // Hide the pop-up message
+    clearTimeout(timeoutID); // Clear the setTimeout
+  };
+
+  messageBox.innerHTML = data.msg.msg || data.msg;
+  messageBox.style.position = "fixed";
+  messageBox.style.top = "50%";
+  messageBox.style.left = "50%";
+  messageBox.style.transform = "translate(-50%, -50%)";
+  messageBox.style.background = "#fff";
+  messageBox.style.padding = "10px";
+  messageBox.style.border = "1px solid #000";
+  messageBox.style.zIndex = "9999";
+
+  document.body.appendChild(messageBox); // Add the pop-up message to the document body
+
+  const timeoutID = setTimeout(displayMessage, 1000); // Set the setTimeout
+
   localStorage.setItem("token", data.token);
 };
