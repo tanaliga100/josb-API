@@ -22,10 +22,9 @@ const createToken_1 = __importDefault(require("../utils/createToken"));
 const hashedPassword_1 = __importDefault(require("../utils/hashedPassword"));
 const REGISTER = (0, async_middleware_1.asyncMiddleware)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { name, email, password } = req.body;
-    console.log(req.body);
-    // VALIDATE: CHECK IF THE REQUEST BODY HAVE VALUES
+    // CHECKE THE REQUEST BODY
     if (!name || !email || !password) {
-        throw new errors_1.BadRequestError("Please provide all the valid values");
+        throw new errors_1.BadRequestError("Please provide a name and email and password");
     }
     // GENERATE: HASHED THE PASSWORD
     const hashedPass = yield (0, hashedPassword_1.default)(password);
@@ -35,7 +34,7 @@ const REGISTER = (0, async_middleware_1.asyncMiddleware)((req, res, next) => __a
         email,
         password: hashedPass,
     };
-    const registeredUser = yield user_model_1.default.create(Object.assign({}, tempUser));
+    const registeredUser = yield user_model_1.default.create(Object.assign(Object.assign({}, req.body), { password: hashedPass }));
     // EXCLUDE: REMOVE THE PASSWORD
     registeredUser.toJSON = function () {
         const userObject = this.toObject();

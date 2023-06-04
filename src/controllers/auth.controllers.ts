@@ -10,10 +10,9 @@ import hashedPassword from "../utils/hashedPassword";
 const REGISTER = asyncMiddleware(
   async (req: Request, res: Response, next: NextFunction) => {
     const { name, email, password } = req.body;
-    console.log(req.body);
-    // VALIDATE: CHECK IF THE REQUEST BODY HAVE VALUES
+    // CHECKE THE REQUEST BODY
     if (!name || !email || !password) {
-      throw new BadRequestError("Please provide all the valid values");
+      throw new BadRequestError("Please provide a name and email and password");
     }
     // GENERATE: HASHED THE PASSWORD
     const hashedPass = await hashedPassword(password);
@@ -24,7 +23,10 @@ const REGISTER = asyncMiddleware(
       password: hashedPass,
     };
 
-    const registeredUser = await User.create({ ...tempUser });
+    const registeredUser = await User.create({
+      ...req.body,
+      password: hashedPass,
+    });
     // EXCLUDE: REMOVE THE PASSWORD
     registeredUser.toJSON = function () {
       const userObject = this.toObject();
